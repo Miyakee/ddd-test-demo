@@ -3,17 +3,19 @@ package com.ddd.parkingLot;
 import static com.google.common.hash.Hashing.*;
 
 import com.ddd.parkingLot.exception.BusinessException;
-import com.ddd.parkingLot.vo.Car;
-import com.ddd.parkingLot.vo.Ticket;
 import com.google.common.base.Charsets;
 import java.util.HashMap;
 
-class ParkingLot {
+public class ParkingLot {
 
   private HashMap<String, Car> currentLots = new HashMap<>();
   private String id;
   private int limit = 1;
   private final static String SALT_PASSWORD = "parkingLot";
+
+  public String getId() {
+    return id;
+  }
 
   ParkingLot(String id, int limit) {
     this.id = id;
@@ -24,7 +26,7 @@ class ParkingLot {
     this.id = id;
   }
 
-  Ticket parking(Car car) {
+  public Ticket parking(Car car) {
     if (!hasEmpty()) {
       throw new BusinessException("该停车场车已经停满");
     }
@@ -42,7 +44,7 @@ class ParkingLot {
     throw new BusinessException("假票");
   }
 
-  private boolean hasEmpty() {
+  boolean hasEmpty() {
     return limit > currentLots.size();
   }
 
@@ -56,6 +58,13 @@ class ParkingLot {
     carNumber = carNumber + SALT_PASSWORD;
     return sha256().newHasher().putString(carNumber, Charsets.UTF_8).hash().toString();
 
+  }
+
+  Boolean moreThan(ParkingLot parkingLot){
+    if(parkingLot == null){
+      return true;
+    }
+    return this.currentLots.size()<parkingLot.currentLots.size();
   }
 
 }

@@ -1,4 +1,4 @@
-package com.ddd.parkingLot.vo;
+package com.ddd.parkingLot;
 
 public class Car {
 

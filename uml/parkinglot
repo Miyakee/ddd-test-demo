@@ -1,0 +1,65 @@
+@startuml
+  class ParkingManager{
+    - List<ParkingBoy> parkingBoys
+    + ParkingManager(List<ParkingBoy> parkingBoys)
+    + ParkingLot findParkingLotByParkingBoy(ParkingBoy parkingBoy)
+    + ParkingLot findParkingLotByParkingBoyId(String parkingBoyId)
+  }
+
+    class ParkingBoy{
+    string id
+    Map<String,ParkingLot> parkingLots
+    ParkingLotFindStrategy strategy
+    + ParkingBoy(Map<String,ParkingLot> parkingLots, String id, ParkingStrategy parkingStrategy)
+    + ParkingLot findParkingLot()
+    }
+
+  class ParkingLotCenter{
+    - Map<String,ParkingLot> allParkingLots
+    - private List<String> parkingOrder
+    +void create(List<String> parkingLotOrder,int size)
+    +void create(List<String> parkingLotOrder)
+  }
+
+interface ParkingStrategy{
+    ~ParkingLot findParkingLot(Map<String,ParkingLot> parkingLots)
+  }
+
+class ParkingLot {
+    - HashMap<String, Car> currentLots,
+    - String id
+    - int limit
+    +Ticket parking(Car car)
+    ~Car picking(Ticket ticket)
+    - bool validTicket()
+    - bool hasEmpty()
+    - String generateTicketToken(String carNumber)
+    ~ Boolean moreThan(ParkingLot parkingLot)
+  }
+  class Car {
+    - String CarNumber
+  }
+
+  class Ticket {
+    - String parkingLotNo
+    + String token
+  }
+
+class MaxSpaceFirstParkingStrategy{
+      ~ParkingLot findParkingLot(Map<String,ParkingLot> parkingLots)
+}
+
+class NaturalParkingStrategy{
+      ~ParkingLot findParkingLot(Map<String,ParkingLot> parkingLots)
+ }
+ParkingStrategy <--* ParkingBoy
+ParkingBoy<--ParkingManager
+ParkingStrategy <|..  MaxSpaceFirstParkingStrategy
+ParkingStrategy <|..   NaturalParkingStrategy
+ParkingLotCenter <--*  ParkingManager
+ParkingLot <--  ParkingLotFactory
+ParkingLot --> Ticket
+ParkingLot --> Car
+ParkingLotCenter -->  ParkingLot
+
+@enduml
